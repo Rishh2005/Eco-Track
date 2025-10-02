@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECO TRACK - Eco AI Assistant</title>
+    <style>
+        @keyframes starMove {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes recordingPulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); 
+                background: #e74c3c;
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); 
+                background: #c0392b;
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); 
+                background: #e74c3c;
+            }
+        }
+
+        .star-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: starMove linear infinite;
+        }
+
+        .star:nth-child(1) { width: 2px; height: 2px; left: 10%; animation-duration: 15s; animation-delay: 0s; }
+        .star:nth-child(2) { width: 3px; height: 3px; left: 20%; animation-duration: 20s; animation-delay: 2s; }
+        .star:nth-child(3) { width: 1px; height: 1px; left: 30%; animation-duration: 25s; animation-delay: 4s; }
+        .star:nth-child(4) { width: 2px; height: 2px; left: 40%; animation-duration: 18s; animation-delay: 6s; }
+        .star:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-duration: 22s; animation-delay: 8s; animation-name: twinkle, starMove; }
+        .star:nth-child(6) { width: 2px; height: 2px; left: 60%; animation-duration: 16s; animation-delay: 10s; }
+        .star:nth-child(7) { width: 1px; height: 1px; left: 70%; animation-duration: 24s; animation-delay: 12s; }
+        .star:nth-child(8) { width: 3px; height: 3px; left: 80%; animation-duration: 19s; animation-delay: 14s; }
+        .star:nth-child(9) { width: 2px; height: 2px; left: 90%; animation-duration: 21s; animation-delay: 16s; }
+        .star:nth-child(10) { width: 1px; height: 1px; left: 15%; animation-duration: 17s; animation-delay: 18s; }
+
+        :root{
+            --accent-blue: #3498db;
+            --accent-dark: #2E4457;
+            --purple-primary: #8E44AD;
+            --purple-dark: #6C3483;
+            --purple-light: #9B59B6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            position: relative;
+            background: transparent;
+        }
+        
+        /* Sidebar - FIXED */
+        .sidebar {
+            width: 72px;
+            background: linear-gradient(180deg, rgb(25, 25, 25) 0%, rgb(35, 35, 35) 100%);
+            color: #ffffff;
+            padding: 16px 8px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.28s cubic-bezier(.2,.8,.2,1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar:hover,
+        .sidebar:focus-within {
+            width: 250px;
+            padding: 20px;
+            align-items: flex-start;
+        }
+        
+        /* FIXED SIDEBAR HEADER */
+        .sidebar-header {
+            width: 100%;
+            padding: 8px 0; /* Removed horizontal padding to prevent overflow */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px; /* Ensure consistent height */
+        }
+        
+        .sidebar:hover .sidebar-header,
+        .sidebar:focus-within .sidebar-header {
+            justify-content: flex-start;
+        }
+        
+        /* FIXED LOGO IMAGE - This is the main fix */
+        .sidebar-header img {
+            width: 46px; /* Fixed width for collapsed state */
+            max-width: 100%; /* Prevent overflow */
+            height: auto;
+            display: block;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            object-fit: contain; /* Maintain aspect ratio */
+        }
+        
+        .sidebar:hover .sidebar-header img,
+        .sidebar:focus-within .sidebar-header img {
+            width: 180px; /* Expanded width */
+            max-width: 180px; /* Prevent going beyond this */
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        
+        .nav-item {
+            margin: 8px 0;
+            width: 100%;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(.2,.8,.2,1);
+            border-left: 3px solid transparent;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(244, 208, 63, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-icon {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            z-index: 1;
+        }
+        
+        .nav-label {
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 0;
+            max-width: 0;
+            transition: all 0.28s ease;
+            color: #ffffff;
+            font-weight: 500;
+            z-index: 1;
+        }
+        
+        .sidebar:hover .nav-label,
+        .sidebar:focus-within .nav-label {
+            opacity: 1;
+            max-width: 400px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #f4d03f;
+            transform: translateX(4px);
+        }
+        
+        .nav-link:hover::before {
+            opacity: 1;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(45deg, rgba(142, 68, 173, 0.3), rgba(155, 89, 182, 0.2));
+            border-left-color: var(--purple-light);
+            color: var(--purple-light);
+        }
+        
+        /* Top Header - ADJUSTED */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 72px; /* Start after sidebar */
+            width: calc(100% - 72px); /* Account for sidebar width */
+            height: 70px;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            gap: 20px;
+            z-index: 999;
+            transition: all 0.28s ease;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        
+        .sidebar:hover ~ .top-header,
+        .sidebar:focus-within ~ .top-header {
+            left: 250px;
+            width: calc(100% - 250px);
+        }
+        
+        .top-right-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* FIXED TOP LOGO */
+        .top-logo {
+            height: 36px;
+            width: auto;
+            max-width: 200px; /* Prevent overflow */
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            display: block;
+        }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(155, 89, 182, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-section:hover {
+            background: rgba(155, 89, 182, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .profile-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Chat Content */
+        .main-content {
+            margin-left: 72px;
+            margin-top: 70px;
+            padding: 20px;
+            background: transparent;
+            width: calc(100% - 72px);
+            min-height: calc(100vh - 70px);
+            transition: all 0.28s ease;
+            display: flex;
+            position: relative;
+        }
+        
+        .sidebar:hover ~ .main-content,
+        .sidebar:focus-within ~ .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+        
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(20, 10, 30, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 20px;
+            background: rgba(142, 68, 173, 0.2);
+            border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .chat-header h2 {
+            color: #fff;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .chat-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+            color: #fff;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message.user {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            margin-left: auto;
+            color: #fff;
+            align-self: flex-end;
+        }
+        
+        .message.ai {
+            background: rgba(50, 30, 70, 0.8);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            color: #fff;
+            align-self: flex-start;
+        }
+        
+        .message.audio {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            margin-left: auto;
+            color: #fff;
+            align-self: flex-end;
+            padding: 8px 12px;
+        }
+        
+        .message.audio audio {
+            width: 250px;
+            height: 30px;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            background: rgba(30, 20, 50, 0.5);
+            border-top: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(20, 10, 30, 0.8);
+            border-radius: 25px;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            padding: 8px 12px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 8px 12px;
+        }
+        
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .input-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 36px;
+            height: 36px;
+        }
+        
+        .input-btn:hover {
+            background: rgba(155, 89, 182, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .input-btn.recording {
+            animation: recordingPulse 1s infinite;
+        }
+        
+        .mic-icon, .attachment-icon, .send-icon {
+            color: var(--purple-light);
+            font-size: 18px;
+        }
+        
+        .nav-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 70px;
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                padding: 8px 16px;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                z-index: 1002;
+                background: rgba(25, 25, 25, 0.95);
+                backdrop-filter: blur(15px);
+            }
+            
+            .sidebar:hover,
+            .sidebar:focus-within {
+                width: 100%;
+                height: 70px;
+                padding: 8px 16px;
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .sidebar-header {
+                display: none;
+            }
+            
+            .nav-menu {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .nav-item {
+                margin: 0;
+                flex: 1;
+            }
+            
+            .nav-link {
+                flex-direction: column;
+                gap: 4px;
+                padding: 8px 4px;
+                text-align: center;
+                border-left: none;
+                border-radius: 8px;
+            }
+            
+            .nav-label {
+                opacity: 1;
+                max-width: none;
+                font-size: 10px;
+                font-weight: 600;
+            }
+            
+            .nav-icon {
+                width: 22px;
+                height: 22px;
+            }
+            
+            .top-header {
+                left: 0;
+                width: 100%;
+                padding: 0 20px;
+                height: 60px;
+            }
+            
+            .top-logo {
+                height: 32px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                margin-bottom: 70px;
+                margin-top: 60px;
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .chat-header h2 {
+                font-size: 1.3em;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+                max-height: 300px;
+            }
+            
+            .message {
+                max-width: 90%;
+                padding: 10px 12px;
+            }
+            
+            .message.audio audio {
+                width: 200px;
+                height: 28px;
+            }
+            
+            .chat-input-container {
+                padding: 15px;
+            }
+            
+            .chat-input-area {
+                gap: 8px;
+                padding: 6px 10px;
+            }
+            
+            .input-btn {
+                width: 32px;
+                height: 32px;
+                padding: 6px;
+            }
+            
+            .profile-info {
+                display: none;
+            }
+            
+            .profile-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-header {
+                padding: 0 15px;
+                height: 55px;
+            }
+            
+            .top-logo {
+                height: 28px;
+            }
+            
+            .main-content {
+                margin-top: 55px;
+                padding: 10px;
+            }
+            
+            .chat-container {
+                border-radius: 15px;
+            }
+            
+            .chat-header {
+                padding: 12px;
+            }
+            
+            .chat-header h2 {
+                font-size: 1.2em;
+            }
+            
+            .chat-header p {
+                font-size: 0.8em;
+            }
+            
+            .chat-messages {
+                padding: 12px;
+                max-height: 250px;
+            }
+            
+            .message {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            
+            .message.audio audio {
+                width: 180px;
+                height: 26px;
+            }
+            
+            .chat-input-container {
+                padding: 12px;
+            }
+            
+            .chat-input {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+            }
+            
+            .profile-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Star Background -->
+    <div class="star-background">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <img src="../images/logoo.png" alt="ECO TRACK company logo">
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                        </svg>
+                    </span>
+                    <span class="nav-label">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="analysis.html" class="nav-link" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Analytics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="report.html" class="nav-link" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Reports</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="operation.html" class="nav-link" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Operation</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="chatbot.html" class="nav-link active" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L6.04,7.5L12,10.85L17.96,7.5L12,4.15Z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Eco AI</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings.html" class="nav-link" role="button">
+                    <span class="nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Top Header -->
+    <div class="top-header">
+        <img src="../images/logoo.png" alt="ECO TRACK outer logo" class="top-logo">
+        <div class="top-right-controls">
+            <div class="profile-section" onclick="toggleProfile()">
+                <div class="profile-avatar">RA</div>
+                <div class="profile-info">
+                    <div class="profile-name">Ravi Admin</div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <h2>🌱 Eco AI Assistant</h2>
+                <p>Ask me anything about environmental data, sustainability, or waste management!</p>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <strong>🤖 Eco AI:</strong> Hello! I'm your environmental AI assistant. How can I help you with sustainability insights today?
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-area">
+                    <button class="input-btn" id="micBtn" title="Record Audio" aria-label="Record audio">
+                        <svg class="mic-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                        </svg>
+                    </button>
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message here..." />
+                    <button class="input-btn" id="attachBtn" title="Attach File" aria-label="Attach file">
+                        <svg class="attachment-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path d="M7.5,18A5.5,5.5 0 0,1 2,12.5A5.5,5.5 0 0,1 7.5,7H18A4,4 0 0,1 22,11A4,4 0 0,1 18,15H9.5A2.5,2.5 0 0,1 7,12.5A2.5,2.5 0 0,1 9.5,10H17V11.5H9.5A1,1 0 0,0 8.5,12.5A1,1 0 0,0 9.5,13.5H18A2.5,2.5 0 0,0 20.5,11A2.5,2.5 0 0,0 18,8.5H7.5A4,4 0 0,0 3.5,12.5A4,4 0 0,0 7.5,16.5H15V18H7.5Z"/>
+                        </svg>
+                    </button>
+                    <button class="input-btn" id="sendBtn" title="Send Message" aria-label="Send message">
+                        <svg class="send-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+                        </svg>
+                    </button>
+
+                </div>
+                <input type="file" id="fileInput" style="display: none;" accept="audio/*,image/*,.pdf,.doc,.docx,.txt" />
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleProfile() {
+            console.log('Profile clicked');
+        }
+
+        // Chat functionality
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const sendBtn = document.getElementById('sendBtn');
+        const micBtn = document.getElementById('micBtn');
+        const attachBtn = document.getElementById('attachBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        // Send message
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+
+            // Simulate AI response
+            setTimeout(() => {
+                const responses = [
+                    "🌱 Based on your query, I can help you analyze environmental data patterns and suggest sustainable solutions.",
+                    "♻️ That's a great question! Here are some eco-friendly recommendations based on current sustainability best practices.",
+                    "🌍 According to environmental data analysis, here's what I found that could help reduce your carbon footprint.",
+                    "📊 Let me analyze the environmental impact data for you and provide actionable insights.",
+                    "🔬 Based on the latest sustainability research, here are some recommendations for your eco-friendly initiatives."
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, 'ai');
+            }, 1000);
+        }
+
+        function addMessage(text, type, audioSrc = null) {
+            const messageDiv = document.createElement('div');
+            
+            if (type === 'audio') {
+                messageDiv.className = 'message audio';
+                const audioElement = document.createElement('audio');
+                audioElement.controls = true;
+                audioElement.src = audioSrc;
+                audioElement.style.width = '250px';
+                audioElement.style.height = '35px';
+                messageDiv.appendChild(audioElement);
+            } else {
+                messageDiv.className = `message ${type}`;
+                if (type === 'user') {
+                    messageDiv.innerHTML = `<strong>👤 You:</strong> ${text}`;
+                } else {
+                    messageDiv.innerHTML = `<strong>🤖 Eco AI:</strong> ${text}`;
+                }
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Voice recording
+        micBtn.addEventListener('click', async () => {
+            if (isRecording) {
+                // Stop recording
+                mediaRecorder.stop();
+                micBtn.classList.remove('recording');
+                isRecording = false;
+            } else {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        addMessage('', 'audio', audioUrl);
+                        
+                        // Stop all tracks to release microphone
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorder.start();
+                    micBtn.classList.add('recording');
+                    isRecording = true;
+                } catch (error) {
+                    console.error('Error accessing microphone:', error);
+                    alert('Unable to access microphone. Please check your permissions.');
+                }
+            }
+        });
+
+        // File attachment
+        attachBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                
+                if (file.type.startsWith('audio/')) {
+                    const audioUrl = URL.createObjectURL(file);
+                    addMessage('', 'audio', audioUrl);
+                } else {
+                    addMessage(`📁 Uploaded file: ${file.name}`, 'user');
+                    setTimeout(() => {
+                        addMessage(`📋 I've received your file "${file.name}". I can help analyze environmental data from documents, images, or provide insights based on the content.`, 'ai');
+                    }, 800);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

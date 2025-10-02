@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Variables */
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --muted: #6b6b6b;
+      --accent: #0b2340;
+      --outline: #0b2340;
+      --shadow: rgba(10,20,40,0.06);
+      --primary-font: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: var(--primary-font); color: var(--accent); background: var(--bg); }
+
+    /* Header */
+    .site-header { background: var(--accent); color: white; padding: 15px 20px; position: fixed; top: 0; width: 100%; z-index: 10; }
+    .header-flex { display: flex; justify-content: space-between; align-items: center; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .logo { font-size: 20px; font-weight: 600; }
+    .back { background: transparent; border: none; cursor: pointer; color: white; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+    .back:hover { background: rgba(255,255,255,0.1); border-radius: 50%; }
+
+    /* Main Content */
+    .main-content { padding-top: 80px; padding-bottom: 40px; }
+    .policy-container { max-width: 800px; margin: 0 auto; background: var(--card); padding: 30px; border-radius: 10px; box-shadow: 0 6px 18px var(--shadow); }
+    .page-title { text-align: center; font-size: 32px; margin-bottom: 30px; font-weight: 700; color: var(--accent); }
+
+    .section { margin-bottom: 30px; }
+    .section-title { font-size: 20px; margin-bottom: 12px; font-weight: 600; color: var(--accent); }
+    .section-text { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 12px; }
+    .section-text.small { font-size: 14px; color: #7a7a7a; }
+    .section-list { padding-left: 20px; }
+    .section-list li { font-size: 15px; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
+
+    /* Button */
+    .action-wrap { text-align: center; margin-top: 20px; }
+    .agree-btn { padding: 14px 28px; border: 2px solid var(--outline); background: transparent; border-radius: 30px; font-size: 16px; font-weight: 600; color: var(--outline); cursor: pointer; transition: all 0.3s ease; }
+    .agree-btn:hover { background: var(--outline); color: #fff; }
+
+    /* Footer */
+    .site-footer { text-align: center; font-size: 14px; padding: 15px; background: #eee; margin-top: 30px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .policy-container { padding: 20px; margin: 0 15px; }
+      .page-title { font-size: 26px; }
+    }
+
+    /* Scrollbar */
+    .main-content::-webkit-scrollbar { width: 6px; }
+    .main-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-flex">
+      <div class="header-left">
+        <button class="back" aria-label="Go back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="policy-container">
+      <h1 class="page-title">Privacy Policy</h1>
+
+      <section class="section">
+        <h2 class="section-title">1. Introduction</h2>
+        <p class="section-text">
+          Welcome to Eco Track. This Privacy Policy explains how we handle your information
+          to provide a safe and secure experience. By using our services, you agree to the terms outlined here.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">2. Information We Collect</h2>
+        <p class="section-text">We collect various types of information to improve our services:</p>
+        <ul class="section-list">
+          <li>Personal details such as name, email address, and phone number.</li>
+          <li>Usage data like pages visited and features accessed.</li>
+          <li>Device information including IP address and browser type.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">3. How We Use Your Data</h2>
+        <p class="section-text">The information we collect is used for:</p>
+        <ul class="section-list">
+          <li>Improving our services and user experience.</li>
+          <li>Sending important notifications and updates.</li>
+          <li>Maintaining the security of our platform.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">4. Cookies and Tracking</h2>
+        <p class="section-text">
+          We use cookies to enhance your browsing experience. Cookies help us remember your preferences
+          and analyze how you interact with our platform.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">5. User Rights</h2>
+        <p class="section-text">You have the right to:</p>
+        <ul class="section-list">
+          <li>Access and review the data we store about you.</li>
+          <li>Request corrections to inaccurate or incomplete data.</li>
+          <li>Request deletion of your personal data where applicable.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">6. Third-Party Services</h2>
+        <p class="section-text">
+          We may share data with trusted third-party partners who help us deliver services,
+          but they are bound by strict confidentiality agreements.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">7. Contact Us</h2>
+        <p class="section-text">
+          If you have any questions about this Privacy Policy, please contact us at:
+        </p>
+        <p class="section-text small">
+          Email: support@circularmetal.com <br>
+          Phone: +1 (555) 123-4567
+        </p>
+
+      </section>
+
+      <div class="action-wrap">
+        <button id="agreeBtn" class="agree-btn">Agree & Continue</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const backButton = document.querySelector('.back');
+      const agreeButton = document.getElementById('agreeBtn');
+
+      // Back button click
+      backButton.addEventListener('click', () => {
+        alert('Returning to the homepage...');
+        window.location.href = "home.html"; // Replace with actual homepage URL
+      });
+
+      // Agree button click
+      agreeButton.addEventListener('click', () => {
+        agreeButton.disabled = true;
+        agreeButton.innerText = 'Processing...';
+
+        setTimeout(() => {
+          alert('Thank you for agreeing to our Privacy Policy!');
+          agreeButton.disabled = false;
+          agreeButton.innerText = 'Agree & Continue';
+          // Optional redirect
+          // window.location.href = "dashboard.html";
+        }, 1000);
+      });
+    });
+  </script>
+
+</body>
+</html>

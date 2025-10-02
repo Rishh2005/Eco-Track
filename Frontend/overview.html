@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CircularLCA - AI-Driven Life Cycle Assessment for Mining & Metallurgy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        'secondary': {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out',
+                        'fade-in-up-delay': 'fadeInUp 0.8s ease-out 0.2s both',
+                        'fade-in-up-delay-2': 'fadeInUp 0.8s ease-out 0.4s both',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'translateY(30px)',
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'translateY(0)',
+                            },
+                        },
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0px)',
+                            },
+                            '50%': {
+                                transform: 'translateY(-20px)',
+                            },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter antialiased bg-gray-50 overflow-x-hidden" x-data="{ mobileMenuOpen: false, scrollY: 0 }" @scroll.window="scrollY = window.pageYOffset">
+    
+    <!-- Header (Your Original) -->
+    <header class="fixed top-0 w-full z-50 transition-all duration-300"
+            :class="scrollY > 100 ? 'bg-white/98 backdrop-blur-md shadow-lg' : 'bg-white/95 backdrop-blur-sm'">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                        <img src="../images/outer.png" alt="CircularLCA" class="w-30 h-10 object-contain">
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">Home</a>
+                    <a href="#features" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">Features</a>
+                    <a href="#services" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">Services</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">Pricing</a>
+                    <a href="#technology" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">Technology</a>
+                    <a href="#about" class="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">About</a>
+                </div>
+
+                <!-- CTA Button & Mobile Menu -->
+                <div class="flex items-center space-x-4">
+                    <a href="signin.html" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                        Get Started
+                    </a>
+                    
+                    <!-- Mobile menu button -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                        <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform -translate-y-2"
+                 class="md:hidden bg-white border-t border-gray-200 shadow-lg">
+                <div class="px-4 pt-2 pb-4 space-y-1">
+                    <a href="#home" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">Home</a>
+                    <a href="#features" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">Features</a>
+                    <a href="#services" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">Services</a>
+                    <a href="#pricing" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">Pricing</a>
+                    <a href="#technology" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">Technology</a>
+                    <a href="#about" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200">About</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center text-center text-white overflow-hidden">
+        <!-- Background -->
+        <div class="absolute inset-0 z-0">
+            <img src="../images/Mine.gif" alt="Mining Background" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-black/50"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+                <span class="bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">AI-Powered</span>
+                <br>
+                Life Cycle Assessment
+            </h1>
+            <p class="text-lg sm:text-xl mb-8 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+                Smart environmental impact analysis for mining and metallurgy operations using artificial intelligence
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="signin.html" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300">
+                    Start Analysis
+                </a>
+                <a href="#features" class="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Overview -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Why Choose 
+                    <span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Eco Track</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Advanced AI technology makes environmental impact assessment fast, accurate, and actionable
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-primary-600 mb-2">15+</div>
+                    <div class="text-gray-600 font-medium">Critical Minerals</div>
+                </div>
+
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-secondary-600 mb-2">99%</div>
+                    <div class="text-gray-600 font-medium">Accuracy Rate</div>
+                </div>
+
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-primary-600 mb-2">24/7</div>
+                    <div class="text-gray-600 font-medium">Available</div>
+                </div>
+
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-secondary-600 mb-2">5min</div>
+                    <div class="text-gray-600 font-medium">Quick Results</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Content -->
+                <div>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                        Smart Environmental 
+                        <span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Analysis</span>
+                    </h2>
+                    
+                    <div class="space-y-6 text-lg text-gray-600">
+                        <p>
+                            Our AI system analyzes environmental impacts across the complete metal lifecycle, from mining to recycling.
+                        </p>
+                        <p>
+                            Get detailed insights into carbon footprint, water usage, energy consumption, and circular economy opportunities in minutes instead of months.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-8 grid grid-cols-2 gap-6">
+                        <div class="bg-white p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-primary-600 mb-1">Fast</div>
+                            <div class="text-sm text-gray-600">Complete analysis in 5 minutes</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-secondary-600 mb-1">Accurate</div>
+                            <div class="text-sm text-gray-600">99% precision with AI validation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <div class="relative">
+                    <div class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-2xl p-8 text-center">
+                        <img src="../images/character.png" alt="AI Assistant" class="w-64 h-64 mx-auto rounded-xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Metals -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Supported 
+                    <span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Materials</span>
+                </h2>
+                <p class="text-lg text-gray-600">
+                    Complete analysis for all major metals and minerals
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <!-- Aluminum -->
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors duration-200">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white text-xl">Al</span>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-1">Aluminum</h4>
+                    <p class="text-sm text-gray-600">Bauxite to aluminum</p>
+                </div>
+
+                <!-- Copper -->
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-secondary-50 transition-colors duration-200">
+                    <div class="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white text-xl">Cu</span>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-1">Copper</h4>
+                    <p class="text-sm text-gray-600">Primary & secondary</p>
+                </div>
+
+                <!-- Lithium -->
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors duration-200">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white text-xl">Li</span>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-1">Lithium</h4>
+                    <p class="text-sm text-gray-600">Battery grade</p>
+                </div>
+
+                <!-- Steel -->
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-secondary-50 transition-colors duration-200">
+                    <div class="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white text-xl">Fe</span>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-1">Steel</h4>
+                    <p class="text-sm text-gray-600">Iron ore to steel</p>
+                </div>
+
+                <!-- Others -->
+                <div class="text-center p-6 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors duration-200">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white text-sm">+10</span>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-1">More</h4>
+                    <p class="text-sm text-gray-600">Gold, silver, zinc</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Our 
+                    <span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Services</span>
+                </h2>
+                <p class="text-lg text-gray-600">
+                    Complete solutions for environmental impact analysis
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-lg">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">LCA Analysis</h3>
+                    <p class="text-gray-600 mb-4">
+                        Complete environmental impact assessment from mining to recycling with AI-powered accuracy.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Carbon footprint calculation</li>
+                        <li>• Water usage analysis</li>
+                        <li>• Energy consumption tracking</li>
+                    </ul>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-lg">
+                    <div class="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z M2 17L12 22L22 17 M2 12L12 17L22 12"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Circular Economy</h3>
+                    <p class="text-gray-600 mb-4">
+                        Identify opportunities for waste reduction and resource optimization in your operations.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Recycling optimization</li>
+                        <li>• Material flow analysis</li>
+                        <li>• Waste reduction strategies</li>
+                    </ul>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-lg">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Reporting</h3>
+                    <p class="text-gray-600 mb-4">
+                        Generate professional reports that meet international standards and regulatory requirements.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• ISO compliant reports</li>
+                        <li>• Interactive dashboards</li>
+                        <li>• Executive summaries</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    Choose Your 
+                    <span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Plan</span>
+                </h2>
+                <p class="text-lg text-gray-600">
+                    Flexible pricing options designed to scale with your sustainability journey
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Basic Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:shadow-lg transition-all duration-300">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                        <div class="text-4xl font-bold text-primary-600 mb-2">₹9,999</div>
+                        <div class="text-gray-600">per month</div>
+                        <div class="text-sm text-gray-500 mt-2">Perfect for small operations</div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-primary-500 mr-3 text-xl">✓</span>
+                            Basic LCA analysis
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-primary-500 mr-3 text-xl">✓</span>
+                            5 metals supported
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-primary-500 mr-3 text-xl">✓</span>
+                            Standard reporting
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-primary-500 mr-3 text-xl">✓</span>
+                            Email support
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-primary-500 mr-3 text-xl">✓</span>
+                            10 analyses per month
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="text-gray-300 mr-3 text-xl">✗</span>
+                            Personal AI agent
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="text-gray-300 mr-3 text-xl">✗</span>
+                            Priority support
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-primary-600 text-white py-3 rounded-full font-semibold hover:bg-primary-700 transition-colors duration-200">
+                        Choose Basic
+                    </button>
+                </div>
+
+                <!-- Premium Plan (Highlighted) -->
+                <div class="bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl p-8 shadow-2xl border-2 border-primary-400 transform scale-105 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full text-sm font-bold">
+                        Most Popular
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                        <div class="text-4xl font-bold text-white mb-2">₹24,999</div>
+                        <div class="text-primary-100">for 3 months</div>
+                        <div class="text-sm text-primary-200 mt-2">Save ₹5,000! Best for growing businesses</div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Everything in Basic
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">🤖</span>
+                            <strong>Personal AI Agent</strong>
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            All 15+ metals supported
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Unlimited analyses
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Advanced data security
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Faster processing (2x speed)
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Priority support (24/7)
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Verified sustainability metrics
+                        </li>
+                        <li class="flex items-center text-white">
+                            <span class="text-yellow-300 mr-3 text-xl">✓</span>
+                            Custom integrations
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-white text-primary-600 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200">
+                        Choose Premium
+                    </button>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:shadow-lg transition-all duration-300">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
+                        <div class="text-4xl font-bold text-secondary-600 mb-2">₹89,999</div>
+                        <div class="text-gray-600">for 12 months</div>
+                        <div class="text-sm text-gray-500 mt-2">Save ₹30,000! Best for large enterprises</div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            Everything in Premium
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">🚀</span>
+                            <strong>Advanced AI Agent Team</strong>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            White-label solutions
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            API access & integrations
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            Dedicated account manager
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            Enterprise-grade security
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            Custom training & onboarding
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="text-secondary-500 mr-3 text-xl">✓</span>
+                            SLA guarantees
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-secondary-600 text-white py-3 rounded-full font-semibold hover:bg-secondary-700 transition-colors duration-200">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+
+            <!-- Premium Features Highlight -->
+            <div class="mt-16 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-2xl p-8 border border-primary-200">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">
+                        🤖 Why Choose Premium with Personal AI Agent?
+                    </h3>
+                    <p class="text-lg text-gray-600">
+                        Get your dedicated AI assistant that works on your behalf 24/7
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-6 bg-white rounded-lg">
+                        <div class="text-3xl mb-4">🚀</div>
+                        <h4 class="font-bold text-gray-900 mb-2">2x Faster Processing</h4>
+                        <p class="text-sm text-gray-600">Personal AI agent prioritizes your tasks</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white rounded-lg">
+                        <div class="text-3xl mb-4">🔒</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Enhanced Security</h4>
+                        <p class="text-sm text-gray-600">Military-grade encryption & data protection</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white rounded-lg">
+                        <div class="text-3xl mb-4">✅</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Verified Metrics</h4>
+                        <p class="text-sm text-gray-600">Certified sustainability expert validation</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white rounded-lg">
+                        <div class="text-3xl mb-4">🎯</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Smarter Insights</h4>
+                        <p class="text-sm text-gray-600">AI learns your patterns for better results</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-secondary-600 text-white rounded-full">
+                        <span class="font-semibold">💎 Premium includes certified sustainability expert verification</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology -->
+    <section id="technology" class="py-20 bg-gradient-to-br from-primary-600 to-secondary-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
+                    Technology 
+                    <span class="text-primary-200">Stack</span>
+                </h2>
+                <p class="text-lg text-primary-100">
+                    Built with cutting-edge AI and cloud technologies
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- AI Technology -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Artificial Intelligence</h3>
+                    </div>
+                    
+                    <div class="space-y-3 text-white/90">
+                        <div>• Machine Learning Models</div>
+                        <div>• Neural Networks</div>
+                        <div>• Predictive Analytics</div>
+                        <div>• Pattern Recognition</div>
+                    </div>
+                </div>
+
+                <!-- Cloud Infrastructure -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mr-4">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Cloud Platform</h3>
+                    </div>
+                    
+                    <div class="space-y-3 text-white/90">
+                        <div>• Secure Cloud Storage</div>
+                        <div>• Auto-scaling</div>
+                        <div>• High Availability</div>
+                        <div>• Global Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Ready to Get Started?
+            </h2>
+            <p class="text-lg text-gray-600 mb-8">
+                Start your environmental impact analysis today with our AI-powered platform
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="signin.html" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:scale-105 transition-all duration-300">
+                    Start Free Trial
+                </a>
+                <a href="#pricing" class="border-2 border-primary-600 text-primary-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300">
+                    View Pricing
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Footer Links -->
+                <div class="flex flex-wrap justify-center md:justify-start gap-8 mb-8 md:mb-0">
+                    <a href="terms.html" class="text-gray-400 hover:text-primary-400 transition-colors duration-200">Terms</a>
+                    <a href="privacy.html" class="text-gray-400 hover:text-primary-400 transition-colors duration-200">Privacy</a>
+                    <a href="#services" class="text-gray-400 hover:text-primary-400 transition-colors duration-200">Services</a>
+                    <a href="#about" class="text-gray-400 hover:text-primary-400 transition-colors duration-200">About</a>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors duration-200">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors duration-200">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2025 CircularLCA. All rights reserved. Advanced sustainability solutions.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Simple Scripts -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = 64;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Simple page load animation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease-in-out';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

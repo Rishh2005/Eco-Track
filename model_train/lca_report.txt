@@ -1,0 +1,6 @@
+LCA Model Report
+Mean Squared Error: 1570211.13
+R2 Score: 0.63
+Total Carbon Emissions: 112100.00
+Energy_Consumption_MWh: 141.90 (0.13% of total emissions)
+Water_Usage_L: 11.70 (0.01% of total emissions)

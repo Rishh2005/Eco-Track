@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CircularLCA - AI-Driven Life Cycle Assessment for Mining & Metallurgy</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background-color: #f4f7f6;
+            padding-top: 50px; /* Reduced from 90px to 50px */
+        }
+
+        /* Minimized Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            height: 50px; /* Reduced from 90px to 50px */
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem; /* Reduced padding */
+        }
+
+        /* Minimized Logo Container */
+        .logo-container {
+            width: 200px; /* Reduced from 638px to 200px */
+            height: 50px; /* Reduced from 90px to 50px */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px; /* Reduced padding */
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Navigation Links - More compact */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem; /* Reduced from 2rem to 1.5rem */
+            margin: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px; /* Reduced from 16px to 14px */
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2e8b57;
+        }
+
+        /* Right Section - More compact */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Reduced from 15px to 10px */
+            flex-shrink: 0;
+        }
+
+        .get-started-btn {
+            background: linear-gradient(135deg, #2e8b57, #20b2aa);
+            color: white;
+            padding: 0.5rem 1rem; /* Reduced from 0.7rem 1.5rem */
+            border: none;
+            border-radius: 20px; /* Reduced from 25px */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px; /* Reduced font size */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem; /* Reduced from 2rem */
+            color: #2e8b57;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Hero Section - Adjusted for smaller header */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .gif-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2e8b57, #20b2aa);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(46, 139, 87, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: white;
+            color: #2e8b57;
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 3.5rem;
+            color: #2e8b57;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #2e8b57, #20b2aa);
+            border-radius: 2px;
+        }
+
+        /* Features Overview Section */
+        .features-overview {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-highlight {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-highlight:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(46, 139, 87, 0.15);
+        }
+
+        .feature-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2e8b57;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .feature-text {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Character Section */
+        .character-section {
+            padding: 5rem 2rem;
+            background: white;
+            text-align: center;
+        }
+
+        .character-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .character-image {
+            flex: 1;
+            min-width: 180px;
+            max-width: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .character-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .character-image img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .character-content {
+            flex: 1.5;
+            min-width: 300px;
+            text-align: left;
+        }
+
+        .character-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #2e8b57;
+            text-align: center;
+        }
+
+        .character-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Simplified Footer */
+        .footer {
+            background: #222;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: #2e8b57;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 1.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .logo-container {
+                width: 150px;
+                height: 45px;
+            }
+            
+            .header {
+                height: 45px;
+            }
+            
+            body {
+                padding-top: 45px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                padding: 1rem 0;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
+            }
+
+            .nav-links li {
+                text-align: center;
+                margin: 0.5rem 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .logo-container {
+                width: 120px;
+                height: 40px;
+            }
+
+            .header {
+                height: 40px;
+            }
+
+            body {
+                padding-top: 40px;
+            }
+
+            .nav-container {
+                padding: 0 0.5rem;
+            }
+
+            .get-started-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 12px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .character-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .character-content {
+                text-align: center;
+            }
+
+            .character-image {
+                margin-bottom: 2rem;
+            }
+
+            .character-content h2 {
+                margin-top: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-container {
+                width: 100px;
+                height: 35px;
+            }
+
+            .header {
+                height: 35px;
+            }
+
+            body {
+                padding-top: 35px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .feature-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Minimized Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <!-- Compact Logo Container -->
+            <div class="logo-container">
+                <img src="../images/outer.png" alt="CircularLCA Logo">
+            </div>
+            
+            <!-- Compact Navigation Links -->
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            
+            <!-- Compact Right Section -->
+            <div class="header-right">
+                <a href="signin.html" class="get-started-btn">Get Started</a>
+            </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle navigation">&#9776;</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <img class="gif-bg" src="../images/Mine.gif" alt="Mining Background GIF">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>AI-Driven Life Cycle Assessment</h1>
+            <p>Advancing Circularity and Sustainability in Metallurgy and Mining through Intelligent Environmental Impact Analysis</p>
+            <div class="hero-buttons">
+                <a href="signin.html" class="btn-primary">Start Your LCA Journey</a>
+                <a href="#features" class="btn-secondary">Explore Platform</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Overview -->
+    <section class="features-overview" id="features">
+        <div class="container">
+            <h2 class="section-title">Platform Capabilities</h2>
+            <div class="features-grid">
+                <div class="feature-highlight">
+                    <div class="feature-number">15+</div>
+                    <div class="feature-text">Critical Minerals Supported</div>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-number">500+</div>
+                    <div class="feature-text">Processing Routes Database</div>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-number">24/7</div>
+                    <div class="feature-text">Real-time Analysis</div>
+                </div>
+                <div class="feature-highlight">
+                    <div class="feature-number">99.2%</div>
+                    <div class="feature-text">Data Accuracy Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Character Section -->
+    <section class="character-section">
+        <div class="character-container">
+            <div class="character-image">
+                <img src="../images/character.png" alt="LCA Assistant Character">
+            </div>
+            <div class="character-content">
+                <h2>Our LCA Assistant</h2>
+                <p>Our advanced AI system combines machine learning algorithms with comprehensive metallurgical databases to deliver precise environmental impact assessments. The platform learns from your inputs and continuously improves prediction accuracy.</p>
+                <p>From raw material extraction to end-of-life recycling, our AI assistant provides complete visibility into your metal's environmental footprint while identifying opportunities for circular economy implementation.</p>
+                <p><strong>Key AI Capabilities:</strong> Parameter estimation, missing data interpolation, predictive modeling, circular flow optimization, and automated report generation with actionable sustainability recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simplified Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="terms.html">Terms of Service</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="#services">Services</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 CircularLCA. All rights reserved. Advancing sustainability in metallurgy and mining.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header background opacity on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            const scrollPosition = window.scrollY;
+            
+            if (scrollPosition > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-open');
+        }
+
+        // Add mobile menu button functionality
+        document.querySelector('.mobile-menu-btn').addEventListener('click', toggleMobileNav);
+    </script>
+</body>
+</html>

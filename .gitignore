@@ -1,0 +1,14 @@
+# Ignore Python virtual environments
+eco_env/
+venv/
+__pycache__/
+*.pyc
+
+# Ignore large/binary stuff
+*.gif
+*.mp4
+*.zip
+*.pkl
+.env
+images/Mine.gif
+images/background.gif
