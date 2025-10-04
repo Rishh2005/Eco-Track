@@ -64,7 +64,7 @@ By bridging the gap between engineers and decision-makers, Eco Track enables sus
 | 1.       | **Rishabh Jain**  | Team Lead / LLM Engineer  | Project management, backend LLM infrastructure, bug fixing, system connectivity |
 | 2.       | Somil Jain        | AI/ML Expert              | Predictive modeling, data-filling algorithms, ML optimization (Scikit-learn, NumPy) |
 | 3.       | Mayank Gupta      | Backend Developer         | Server-side logic, API development (FastAPI/Flask), secure & efficient data flow |
-| 4.       | Pari Agarwal      | Figma Designer / UI/UX    | Designing intuitive UI/UX and professional wireframes |
+| 4.       | Pari Agrawal      | Figma Designer / UI/UX    | Designing intuitive UI/UX and professional wireframes |
 | 5.       | Saransh Jain      | Frontend Developer        | Building responsive web app (HTML, CSS, JS), multilingual UI features |
 | 6.       | Yashvika Bhardwaj | Researcher & Presenter    | Market research, presentation design, data validation, final documentation |
 
