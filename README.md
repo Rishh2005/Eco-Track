@@ -56,7 +56,7 @@ By bridging the gap between engineers and decision-makers, Eco Track enables sus
 
 ---
 
-## Team "Code With Bugs"  
+## Team : Code With Bugs
 
 
 | Sr. No. | Member Name        | Role                       | Responsibilities |
@@ -94,7 +94,7 @@ Eco Track directly impacts sustainability in metallurgy & mining by:
 | Backend       | FastAPI, Flask, Laravel, Php |
 | Frontend      | HTML, CSS, JavaScript |
 | Design        | Figma, Canva |
-| Data Sources  | Verified APIs, Kaggle, Sustainability Datasets, Hugging Face, Sp |
+| Data Sources  | Verified APIs, Kaggle, Sustainability Datasets, Hugging Face, Sphera |
 
 ---
 
