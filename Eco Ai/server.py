@@ -14,7 +14,6 @@ import PyPDF2
 import docx
 from werkzeug.utils import secure_filename
 
-# --- SETUP ---
 load_dotenv()
 app = Flask(__name__)
 CORS(app)
